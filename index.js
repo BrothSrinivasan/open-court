@@ -15,6 +15,7 @@ const fs = require('fs');
 const rmdir = require('rimraf');
 const http = require('http');
 const socket = require('socket.io');
+const store = require('connect-mongo')
 const Case = require('./models/cases');
 const pdfMagic = require('./helper').pdfMagic;
 const filterMap = require('./helper').filterMap;
@@ -28,6 +29,7 @@ dotenv.config();
 const app = express();
 const server = http.Server(app);
 const io = socket(server);
+const MongoStore = store(session);
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 const eghbs = exphbs.create({
     defaultLayout: 'main',
@@ -73,9 +75,11 @@ app.use(session({
     saveUninitialized: false,
     secret: 'my-secret',
     cookie: {
+	maxAge: 1000 * 60 * 60,
 	sameSite: true,
 	secure: false,
-    }
+    },
+    store: new MongoStore({mongooseConnection: mongoose.connection})
 }))
 
 // Routing
