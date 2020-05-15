@@ -485,8 +485,8 @@ app.get('*', function(req, res) {
     res.render('error', {message: "404 ERROR: PAGE NOT FOUND"});
 });
 
-server.listen(3000, function() {
-    console.log('Listening on port 3000!');
+server.listen(process.env.PORT || 3000, function() {
+    console.log('Listening');
 });
 
 io.on('connection', (socket) => {
