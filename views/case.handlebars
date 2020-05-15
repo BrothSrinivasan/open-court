@@ -329,12 +329,22 @@
      var ptiff = "{{cases.plaintiff.token}}";
      var dfant = "{{cases.defendant.token}}";
 
-     alert("SHARE WITH APPROPRIATE PARTIES ONLY\n\n"
-	 + "Judge: " + judge
-	 + "\nPlaintiff: " + ptiff
-	 + "\nDefendant: " + dfant);
+     var side = prompt("Judge, Plaintiff, or Defendant?")
+     
+     if(side != null) {
+	 if(!['judge', 'plaintiff', 'defendant'].includes(side.toLowerCase()))
+	     alert("INVALID SIDE. TRY AGAIN");
+	 else if(confirm("SHARE WITH APPROPRIATE PARTIES ONLY")) {
+	     if(side == 'plaintiff')
+		 alert("Plaintiff: " + ptiff);
+	     else if (side == 'defendant')
+		 alert("Defendant: " + dfant);
+	     else
+		 alert("Judge: " + judge);
+	 }
+     }
  }
-
+ 
  function notkeep() {
      var filename = prompt("PLEASE ENTER THE FILE NAME");
      

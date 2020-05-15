@@ -225,7 +225,8 @@ p {
 
 .meta h3 {
     display: inline-block;
-    padding-inline: 70px;
+    padding-left: 40px;
+    padding-right: 40px;
     margin: 0;
     padding-bottom: 10px;
 }
