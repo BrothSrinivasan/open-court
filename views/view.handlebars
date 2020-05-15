@@ -1,0 +1,144 @@
+<br>
+
+<div class="navbar">
+    <a style="background-color: #737350">Filter Bar</a>
+    <a class="all" href="/viewall">All</a>
+    <div class="dropdown">
+	<button class="dropbtn">Jurisdiction</button>
+	<div class="dropdown-content">
+	    <a href="/viewall?filter=original">Original</a>
+	    <a href="/viewall?filter=appellate">Appellate</a>
+	</div>
+    </div>
+    <div class="dropdown">
+	<button class="dropbtn">Level</button>
+	<div class="dropdown-content">
+	    <a href="/viewall?filter=federal">Federal</a>
+	    <a href="/viewall?filter=state">State</a>
+	</div>
+    </div>
+    <div class="dropdown">
+	<button class="dropbtn">Type</button>
+	<div class="dropdown-content">
+	    <a href="/viewall?filter=criminal">Criminal</a>
+	    <a href="/viewall?filter=civil">Civil</a>
+	</div>
+    </div>
+    <div class="dropdown">
+	<button class="dropbtn">Status</button>
+	<div class="dropdown-content">
+	    <a href="/viewall?filter=open">Open</a>
+	    <a href="/viewall?filter=closed">Closed</a>
+	</div>
+    </div>
+    <div class="dropdown">
+	<button class="dropbtn">Security Clearance</button>
+	<div class="dropdown-content">
+	    <a href="/viewall?filter=public">Public</a>
+	    <a href="/viewall?filter=sealed">Sealed</a>
+	</div>
+    </div>
+    <div class="search-container">
+	<input type="text" id="bar" placeholder="Search Here..." width="100px">
+    </div>
+</div>
+
+<br>
+
+<div class="cases">
+    
+    {{#each cases}}
+    
+    <ul class="court">
+
+	<br>
+	
+	<li><u><h3>{{@key}}</h3></u></li>
+	<ul>
+	    
+	    {{#each this}}
+	    
+	    <li>
+		<a class="links" href="/case?docket={{docket}}" style="display: block">
+		    {{name}}
+		    <p>Docket Number: {{docket}}</p>
+		    <p>Presiding Judge/Justice: {{judge.person}}</p>
+		    <p class="date">{{date}}</p>
+		</a>
+	    </li>
+	    
+	    {{/each}}
+	    
+	</ul>
+
+	<br>
+	
+    </ul>
+    
+    {{/each}}
+    
+    <h3 class="none" style="text-align: center">
+	
+	{{#if length}}
+	
+	NO CASES WERE FOUND
+	
+	{{/if}}
+	
+    </h3>
+</div>
+
+<script>
+ 
+ $('#bar').on('keyup', function(e) {
+     var found = false;
+     var child = -1;
+     var text = $('#bar').val().replace('?', '\\?').replace('.', '\\.');
+     var regex = new RegExp(text, 'gim');
+     
+     $('.none').html("");
+     
+     $('.court').each(function(i, e) {
+	 var total = $(this).children().length;
+	 
+	 $(this).children().each(function(r, c) {
+	     if(r > 1 && r < total-1) {
+		 child = $(this).children().length;
+		 
+		 $(this).children().each(function(k, l) {
+		     text = l.children[0].firstChild.data.trim();
+		     text = text + " " + l.children[0].children[0].innerText.substring(15);
+		     text = text + " " + l.children[0].children[1].innerText.substring(25);
+		     text = text + " " + l.children[0].children[2].innerText.substring(10);
+		     text = text + " " + $('.court li u h3')[i].innerText;
+		     
+		     if(text.match(regex) == null) {
+			 l.style.display = 'none';
+			 child -= 1;
+		     } else {
+			 l.style.display = '';
+			 found = true;
+		     }
+		 });
+	     }
+	 });
+	 
+	 if(child == 0) {
+	     e.children[1].style.display = 'none';
+	     e.style.display = 'none';
+	 } else {
+	     e.children[1].style.display = '';
+	     e.style.display = '';
+	 }
+     });
+
+     if(!found)
+	 $('.none').html("NO CASES WERE FOUND");
+ });
+
+ $('.date').each(function(i, e) {
+     var date = new Date(Date.parse($(this).text()));
+     $(this).html("Filed On: " + date.toDateString());
+ });
+ 
+</script>

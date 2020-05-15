@@ -1,0 +1,57 @@
+<div class="create">
+    <form method="POST" action="/create">
+	<h4>Case Information</h4>
+	<fieldset>
+	    <label for="name">Case Name</label>
+	    <input type="text" id="name" name="name" required><br>
+	    
+	    <label for="docket">Docket Number</label>
+	    <input type="text" id="docket" name="docket" required><br>
+	    
+	    <label for="house">Official Name of the Court</label>
+	    <input type="text" id="house" name="house" required><br>
+
+	    <label for="date">Filed On</label>
+	    <input type="date" id="date" name="date" min="1788-06-21" required><br>
+	    
+	    <label for="type">Level</label>
+	    <select id="type" name="level" required>
+		<option selected disabled></option>
+		<option value="federal"> Federal Case </option>
+		<option value="state"> State Case </option>
+	    </select><br>
+
+	    <label for="type">Type</label>
+	    <select id="type" name="type" required>
+		<option selected disabled></option>
+		<option value="criminal"> Criminal Case </option>
+		<option value="civil"> Civil Case </option>
+	    </select><br>
+	    
+	    <label for="appeal">Jurisdiction</label>
+	    <select id="appeal" name="appeal" required>
+		<option selected disabled></option>
+		<option value="false">Original</option>
+		<option value="true">Appellate</option>
+	    </select>
+	</fieldset>
+	
+	<br>
+	
+	<h4>Persons' Information</h4>
+	<fieldset>
+	    <label for="judge">Judge/Justice</label>
+	    <input type="text" id="judge" name="judge" required><br>
+	    
+	    <label for="plaintiff">Lead Lawyer for Plaintiff</label>
+	    <input type="text" id="plaintiff" name="plaintiff" required><br>
+	    
+	    <label for="defendant">Lead Lawyer for Defendant</label>
+	    <input type="text" id="defendant" name="defendant" required><br>
+	</fieldset>
+	
+	<br><br>
+	
+	<input type="submit" value="New Case">
+    </form>
+</div>

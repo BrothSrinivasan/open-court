@@ -1,0 +1,24 @@
+<div class="token-buttons" style="margin-top: 15%; margin-bottom: 3%">
+    <div>
+	<form method="POST" action="/join" style="float:left">
+	    <input id="tinput" type="text" name="token" placeholder="Enter Token Here">
+	    <input id="tbutton" type="submit" value="Enter">
+	</form>
+    </div>
+</div>
+
+<div class="token-buttons" style="height:100px">
+    <div>
+	
+	{{#if authed}}
+
+	<p id="orid"> OR </p>
+	
+	<button type="submit" id="joincase">
+	    <a href="{{url}}" style="padding: 15px; display: block">Go to Joined Case</a>
+	</button>
+	
+	{{/if}}
+	
+    </div>
+</div>

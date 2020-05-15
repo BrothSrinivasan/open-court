@@ -1,0 +1,31 @@
+<ul class="files">
+
+    {{#each cases.links}}
+    {{#with this}}
+    {{#eq this side ../person}}
+    
+    <li class="file">
+	<a href="{{path}}" style="display: block">{{name}}</a>
+	<p class="info">version: {{version}}</p>
+	<p class="info date">{{date}}</p>
+    </li>
+    
+    {{/eq}}
+    {{/with}}
+    {{/each}}
+    
+</ul>
+
+<br>
+
+{{#eq this party person}}
+
+<form method="POST" action="/upload" enctype="multipart/form-data">
+    <input type="file" id="upload" name="path" required>
+    <input type="hidden" name="docket" value={{cases.docket}}>
+    <input type="hidden" name="person" value={{person}}>
+    <input type="submit" value="Upload Document" style="width:auto; height: auto">
+</form>
+
+{{/eq}}
+

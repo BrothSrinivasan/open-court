@@ -1,0 +1,434 @@
+<div class="meta">
+    <h1><u>{{cases.name}}</u></h1>
+    <h2>{{cases.house}}</h2>
+    
+    <h3>Docket No. {{cases.docket}}</h3>
+    <h3>Type: {{capital cases.type}}</h3>
+
+    {{#if cases.appeal}}
+    
+    <h3>Jurisdiction: Appellate </h3>
+    
+    {{else}}
+    
+    <h3>Jurisdiction: Original</h3>
+    
+    {{/if}}
+
+    {{#unless cases.close}}
+    
+    <h3>Status: Open Case</h3>    
+    
+    {{else}}
+    
+    <h3>Status: Closed</h3>
+    
+    {{/unless}}
+    
+    <br>
+    
+    <input id="search" placeholder="Search for Files Here">
+    
+    {{#eq this party 'judge'}}
+    
+    <br>
+    
+    <div class="order-buttons">
+
+	{{#unless cases.close}}
+	
+	<button class="orders" id="close" onClick="notopen()">Close Case</button>
+
+	{{/unless}}
+	
+	{{#if cases.seal}}
+	
+	<button class="orders" id="seal" onClick="seal()">Unseal Case</button>
+	
+	{{else}}
+	
+	<button class="orders" id="seal" onClick="seal()">Seal Case</button>
+	
+	{{/if}}
+	
+	<button class="orders" id="retrieve" onClick="retrieve()">Get Tokens</button>
+	<button class="orders" id="remove" onClick="notkeep()">Remove File</button>
+	<button class="orders" id="delete" onClick="ridoff()">Delete Case</button>
+	
+    </div>
+
+    {{/eq}}
+
+</div>
+
+{{#unless cases.seal}}
+
+<div class="row">
+    <div class="col">
+	<h2>Honorable {{cases.judge.person}}'s Orders </h2>
+	
+	{{>upload person='judge'}}
+	
+    </div>
+    
+    {{#noteq this party 'amici'}}
+    
+    <div class="col">
+	<h2>CHAT HERE</h2>
+	<div id="box">
+	    <ul id="messages">
+
+		{{#each cases.messages}}
+		{{#with this}}
+
+		{{#eq this name ../cases.judge.person}}
+		
+		<li class="judge">
+		    <p class="msg">{{name}}: {{message}}</p>
+		    <p class="msg">Sent: {{date}}</p>
+		</li>
+
+		{{else}}
+		{{#eq this name ../cases.plaintiff.person}}
+		
+		<li class="plaintiff">
+		    <p class="msg">{{name}}: {{message}}</p>
+		    <p class="msg">Sent: {{date}}</p>
+		</li>
+		
+		{{else}}
+
+		<li class="defendant">
+		    <p class="msg">{{name}}: {{message}}</p>
+		    <p class="msg">Sent: {{date}}</p>
+		</li>
+		
+		{{/eq}}
+		{{/eq}}
+		{{/with}}
+		{{/each}}
+		
+	    </ul>
+	    <textarea id="m" cols="100" maxlength="140" placeholder="140 chars max"></textarea>
+	    <button onClick="sendit()">Send Message</button>
+	</div>
+    </div>
+    
+    {{/noteq}}
+
+</div>
+<div class="row">
+    <div class="col">
+	<h2>{{cases.plaintiff.person}}'s' Files (Plaintiff)</h2>
+	
+	{{>upload person='plaintiff'}}
+	
+    </div>
+    
+    {{#if cases.appeal}}
+    
+    <div class="col">
+	<h2>Amici Briefs </h2>
+	
+	{{>upload person='amici'}}
+	
+    </div>
+    
+    {{/if}}
+    
+    <div class="col">
+	<h2>{{cases.defendant.person}}'s' Files (Defendant)</h2>
+	
+	{{>upload person='defendant'}}
+	
+    </div>
+</div>
+
+{{else}}
+{{#eq this party 'amici'}}
+
+<div class="row" style="text-align: center">
+    <div class="col" style="height: 80px">
+	<h2>CASE IS SEALED UPON ORDERS FROM THE COURT</h2>
+    </div>
+</div>
+
+{{else}}
+
+<div class="row">
+    <div class="col">
+	<h2>Honorable {{cases.judge.person}}'s Orders </h2>
+	
+	{{>upload person='judge'}}
+	
+    </div>
+    <div class="col">
+	<h2>CHAT HERE</h2>
+	<div id="box">
+	    <ul id="messages">
+
+		{{#each cases.messages}}
+		{{#with this}}
+		
+		{{#eq this name ../cases.judge.person}}
+		
+		<li class="judge">
+		    <p class="msg">{{name}}: {{message}}</p>
+		    <p class="msg">Sent: {{date}}</p>
+		</li>
+		
+		{{else}}
+		{{#eq this name ../cases.plaintiff.person}}
+		
+		<li class="plaintiff">
+		    <p class="msg">{{name}}: {{message}}</p>
+		    <p class="msg">Sent: {{date}}</p>
+		</li>
+		
+		{{else}}
+		
+		<li class="defendant">
+		    <p class="msg">{{name}}: {{message}}</p>
+		    <p class="msg">Sent: {{date}}</p>
+		</li>
+		
+		{{/eq}}
+		{{/eq}}
+		{{/with}}
+		{{/each}}
+		
+	    </ul>
+	    <textarea id="m" cols="100" maxlength="140" placeholder="140 chars max"></textarea>
+	    <button onClick="sendit()">Send Message</button>
+	</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+	<h2>{{cases.plaintiff.person}}'s Files (Plaintiff)</h2>
+	{{>upload person='plaintiff'}}
+    </div>
+    
+    {{#if cases.appeal}}
+    
+    <div class="col">
+	<h2>Amici Briefs </h2>
+	
+	{{>upload person='amici'}}
+	
+    </div>
+    
+    {{/if}}
+    
+    <div class="col">
+	<h2>{{cases.defendant.person}}'s Files (Defendant)</h2>
+	
+	{{>upload person='defendant'}}
+	
+    </div>
+</div>
+
+{{/eq}}
+
+{{/unless}}
+
+<script>
+ 
+ var docket = "{{cases.docket}}";
+ var party = "{{party}}";
+ var socket = io();
+ 
+ $('#search').on('keyup', function(e) {
+     var found = false;
+     var child = -1;
+     var text = $('#search').val().replace('?', '\\?').replace('.', '\\.');
+     var regex = new RegExp(text, 'gim');
+
+     $('.files').each(function(i, e) {
+	 var total = $(this).children().length;
+
+	 $(this).children().each(function(r, c) {
+	     text = c.children[0].innerText;
+
+	     if(text.match(regex) == null) {
+		 c.style.display = 'none';
+	     } else {
+		 c.style.display = '';
+		 found = true;
+	     }
+	 });	 
+     });
+
+     if(!found) {
+	 alert("No Such File Was Found");
+	 
+	 $('#search').val('');
+	 
+	 $('.files').each(function(i, e) {
+	     $(this).children().each(function(r, c) {
+		 if(text.match(regex) == null)
+		     c.style.display = '';
+	     });	 
+	 });
+     }
+ });
+ 
+ $('.date').each(function(i, e) {
+     var date = new Date(Date.parse($(this).text()));
+     $(this).html("last changed: " + date.toString());
+ });
+
+ $('#messages').scrollTop($('#messages')[0].scrollHeight);
+ 
+ function seal() {    
+     $.ajax({
+	 "type": "PUT",
+	 "url": "/seal",
+	 "dataType": 'text',
+	 "data": {
+	     docket: docket
+	 },
+	 "success": function(data, status) {
+	     console.log("put /seal " + status);
+	     
+	     if($('#seal').html() == 'Seal Case')
+		 $('#seal').html('Unseal Case');
+	     else
+		 $('#seal').html('Seal Case');
+	 },
+	 "error": function(_, status, err) {
+	     console.log("put /seal " + status);
+	 }
+     });
+ }
+
+ function notopen() {
+     if(confirm('ARE YOU SURE YOU WANT TO CLOSE THE CASE?')) {
+	 $.ajax({
+	     "type": "PUT",
+	     "url": "/close",
+	     "dataType": 'text',
+	     "data": {
+		 docket: docket
+	     },
+	     "success": function(data, status) {
+		 alert('SUCCESSFULLY CLOSED THE CASE');
+		 console.log("put /close " + status);
+		 location.reload();
+	     },
+	     "error": function(_, status, err) {
+		 alert('FAILED TO CLOSE THE CASE. TRY AGAIN');
+		 console.log("put /close " + status);
+	     }
+	 });
+     }
+ }
+
+ function retrieve() {
+     var judge = "{{cases.judge.token}}";
+     var ptiff = "{{cases.plaintiff.token}}";
+     var dfant = "{{cases.defendant.token}}";
+
+     alert("SHARE WITH APPROPRIATE PARTIES ONLY\n\n"
+	 + "Judge: " + judge
+	 + "\nPlaintiff: " + ptiff
+	 + "\nDefendant: " + dfant);
+ }
+
+ function notkeep() {
+     var filename = prompt("PLEASE ENTER THE FILE NAME");
+     
+     if(filename != null) {
+	 var side = prompt("Judge, Plaintiff, Defendant, or Amici?")
+	 
+	 if(side != null) {
+	     if(!['judge', 'plaintiff', 'defendant', 'amici'].includes(side.toLowerCase()))
+		 alert("INVALID SIDE. TRY AGAIN");
+	     else if(confirm(filename + "\n" + side + "\nARE YOU SURE?")) {
+		 $.ajax({
+		     "type": "DELETE",
+		     "url": "/remove",
+		     "dataType": 'text',
+		     "data": {
+			 docket: docket,
+			 filename: filename,
+			 side: side
+		     },
+		     "success": function(data, status) {
+			 alert("SUCCESSFULLY DELETED " + filename);
+			 console.log("put /remove " + status);
+			 location.reload();
+		     },
+		     "error": function(_, status, err) {
+			 alert("FAILED TO DELETE " + filename + ". TRY AGAIN");
+			 console.log("put /remove " + status);
+		     }
+		 });
+	     }
+	 }
+     }
+ }
+
+ function ridoff() {
+     if(confirm("ARE SURE YOU WANT TO DELETE THE WHOLE CASE?")) {
+	 $.ajax({
+	     "type": "DELETE",
+	     "url": "/delete",
+	     "dataType": 'text',
+	     "data": {
+		 docket: docket
+	     },
+	     "success": function(data, status) {
+		 alert("SUCCESSFULLY DELETED THE CASE");
+		 location.replace("/");
+		 console.log("put /delete " + status);
+	     },
+	     "error": function(_, status, err) {
+		 alert("FAILED TO DELETE THE CASE. TRY AGAIN");
+		 console.log("put /delete " + status);
+	     }
+	 });
+     }
+ }
+
+ function sendit() {
+     var msg = $('#m').val().trim();
+     
+     if(msg.length > 0) {
+	 $.ajax({
+	     "type": "POST",
+	     "url": "/chat",
+	     "dataType": 'text',
+	     "data": {
+		 docket: docket,
+		 party: party,
+		 msg: msg,
+		 date: Date.now()
+	     },
+	     "success": function(data, status) {
+		 console.log("put /chat " + status);
+	     },
+	     "error": function(_, status, err) {
+		 console.log("put /chat " + status);
+	     }
+	 });
+	 
+	 $('#m').val('');
+     }
+     
+     return false;
+ }
+
+ socket.on('chat', (data) => {
+     var p1 = $('<p>').text(data.name + ": " + data.msg).addClass('msg');
+     var p2 = $('<p>').text("Sent: " + new Date(parseInt(data.date)).toString()).addClass('msg');
+     
+     var list = $('<li>').addClass(data.party);
+     list.append(p1);
+     list.append(p2);
+     
+     $('#messages').append(list);
+     $('#messages').scrollTop($('#messages')[0].scrollHeight);
+ });
+
+</script>
